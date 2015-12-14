@@ -125,7 +125,7 @@ USE_TZ = True
 MEDIA_ROOT = PROJECT_PATH + '/media/'
 MEDIA_URL = ''
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -134,7 +134,6 @@ STATICFILES_FINDERS = (
 )
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, 'static/'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -144,7 +143,8 @@ STATICFILES_DIRS = (
 BOWER_COMPONENTS_ROOT = '{0}/components/'.format(BASE_DIR)
 BOWER_INSTALLED_APPS = (
     'jquery',
-    'bootstrap'
+    'bootstrap',
+    'underscore',
 )
 
 LOGGING = {
