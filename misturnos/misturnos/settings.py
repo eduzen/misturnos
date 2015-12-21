@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog',
     'schedule',
     'djangobower',
+    'taskmanager'
 ]
 
 MIDDLEWARE_CLASSES = [
