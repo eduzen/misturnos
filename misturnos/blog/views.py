@@ -49,3 +49,15 @@ def post_edit(request, pk):
 
 def test(request):
     return render(request, 'blog/test.html')
+
+
+def testnavbar(request):
+    return render(request, 'blog/navbar.html')
+
+
+def index(request):
+    return render(request, 'blog/index.html')
+
+
+def loginform(request):
+    return render(request, 'blog/loginform.html')
