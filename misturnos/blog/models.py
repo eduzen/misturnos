@@ -2,12 +2,9 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.db.models.signals import post_save
-from django.core.validators import RegexValidator
 from django.dispatch import receiver
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from . import managers
 from django.contrib.auth.models import User
 
 
@@ -53,6 +50,29 @@ class Profile(models.Model):
 
     def __str__(self):
         return u'<%s>' % self.user.username
+
+
+class Address(models.Model):
+
+    profile = models.ForeignKey(Profile)
+    address_type = models.CharField(
+        max_length=10,
+    )
+    address = models.CharField(
+        max_length=255,
+    )
+    city = models.CharField(
+        max_length=255,
+    )
+    state = models.CharField(
+        max_length=2,
+    )
+    postal_code = models.CharField(
+        max_length=20,
+    )
+
+    class Meta:
+        unique_together = ('contact', 'address_type',)
 
 
 class Project(models.Model):
