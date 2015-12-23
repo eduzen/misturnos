@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.views.generic import View
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -63,8 +64,12 @@ def login(request):
     return render(request, 'blog/login.html')
 
 
-def register(request):
-    return render(request, 'blog/register.html')
+class Register(View):
+    def post(self, request, *args, **kwargs):
+        pass
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'blog/register.html')
 
 
 def logout(request):

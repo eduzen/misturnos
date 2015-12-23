@@ -6,10 +6,13 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 
 class Post(models.Model):
-    author = models.ForeignKey('auth.User')
+    # Relations
+    author = models.ForeignKey(User)
+    # Attributes
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(
@@ -17,6 +20,7 @@ class Post(models.Model):
     published_date = models.DateTimeField(
             blank=True, null=True)
 
+    # Methods
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -34,6 +38,13 @@ class Profile(models.Model):
         on_delete=models.CASCADE
         )
     # Attributes
+    profession = models.CharField(max_length=100)
+    phone_regex = RegexValidator(
+        regex=r'^\d{8,13}$',
+        message="Phone number must be entered in the format: '99999999'."
+        "Up to 13 digits allowed."
+    )
+    phone_number = models.CharField(validators=[phone_regex], max_length=13, blank=True)
 
     # Custom Properties
     @property
@@ -53,8 +64,10 @@ class Profile(models.Model):
 
 
 class Address(models.Model):
-
+    # Relations
     profile = models.ForeignKey(Profile)
+
+    # Attributes
     address_type = models.CharField(
         max_length=10,
     )
@@ -72,7 +85,7 @@ class Address(models.Model):
     )
 
     class Meta:
-        unique_together = ('contact', 'address_type',)
+        unique_together = ('profile', 'address_type',)
 
 
 class Project(models.Model):
