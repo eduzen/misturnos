@@ -44,7 +44,11 @@ class Profile(models.Model):
         message="Phone number must be entered in the format: '99999999'."
         "Up to 13 digits allowed."
     )
-    phone_number = models.CharField(validators=[phone_regex], max_length=13, blank=True)
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=13,
+        blank=True
+    )
 
     # Custom Properties
     @property

@@ -5,6 +5,7 @@ from django.views.generic import View
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+from .forms import UserForm
 
 
 # Create your views here.
@@ -66,10 +67,17 @@ def login(request):
 
 class Register(View):
     def post(self, request, *args, **kwargs):
-        pass
+        print request
+        print dir(request)
+        data = request.POST
+        print data
+
+        return redirect('/')
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'blog/register.html')
+        form = UserForm()
+
+        return render(request, 'blog/register.html', {'form': form})
 
 
 def logout(request):
