@@ -46,3 +46,31 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+
+def test(request):
+    return render(request, 'blog/test.html')
+
+
+def testnavbar(request):
+    return render(request, 'blog/navbar.html')
+
+
+def index(request):
+    return render(request, 'blog/index.html')
+
+
+def login(request):
+    return render(request, 'blog/login.html')
+
+
+def register(request):
+    return render(request, 'blog/register.html')
+
+
+def logout(request):
+    return render(request, 'blog/index.html')
+
+
+def change_password(request):
+    return render(request, 'blog/change-password.html')
