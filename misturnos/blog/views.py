@@ -63,8 +63,8 @@ def login(request):
     return render(request, 'blog/login.html')
 
 
-def registro(request):
-    return render(request, 'blog/registro.html')
+def register(request):
+    return render(request, 'blog/register.html')
 
 
 def logout(request):
