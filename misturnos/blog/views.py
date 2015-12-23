@@ -59,5 +59,13 @@ def index(request):
     return render(request, 'blog/index.html')
 
 
-def loginform(request):
-    return render(request, 'blog/loginform.html')
+def login(request):
+    return render(request, 'blog/login.html')
+
+
+def registro(request):
+    return render(request, 'blog/registro.html')
+
+
+def logout(request):
+    return render(request, 'blog/index.html')

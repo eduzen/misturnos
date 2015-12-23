@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^test$', views.test),
     url(r'^navbar$', views.testnavbar),
+    url(r'^login$', views.login),
+    url(r'^registro$', views.registro),
+    url(r'^logout$', views.index),
 ]
