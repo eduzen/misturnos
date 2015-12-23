@@ -10,7 +10,7 @@ from crispy_forms.bootstrap import StrictButton
 
 class UserForm(forms.ModelForm):
     helper = FormHelper()
-    helper.form_class = 'form-horizontal'
+    # helper.form_class = 'form-horizontal'
     helper.layout = Layout(
         'email',
         'password',
