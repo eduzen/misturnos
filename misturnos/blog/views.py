@@ -69,3 +69,7 @@ def register(request):
 
 def logout(request):
     return render(request, 'blog/index.html')
+
+
+def change_password(request):
+    return render(request, 'blog/change-password.html')
