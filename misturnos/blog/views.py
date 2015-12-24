@@ -6,6 +6,7 @@ from django.utils import timezone
 from .models import Post
 from .forms import PostForm
 from .forms import UserForm
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -67,15 +68,19 @@ def login(request):
 
 class Register(View):
     def post(self, request, *args, **kwargs):
-        print "edu"
-        print request
-        print dir(request)
         data = request.POST
-        print data
         try:
-            userName = request.REQUEST.get('username', None)
-            userPass = request.REQUEST.get('password', None)
-            userMail = request.REQUEST.get('email', None)
+            print "edu"
+            print request
+            print dir(request)
+            print data
+            userName = data.get('username', None)
+            userPass = data.get('password', None)
+            userMail = data.get('email', None)
+            user = User.objects.create_user(username=userName,
+                                            email=userMail,
+                                            password=userPass)
+            user.save()
         except Exception as e:
             print e
             return redirect('/')
