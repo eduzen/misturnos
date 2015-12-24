@@ -67,6 +67,7 @@ def login(request):
 
 class Register(View):
     def post(self, request, *args, **kwargs):
+        print "edu"
         print request
         print dir(request)
         data = request.POST

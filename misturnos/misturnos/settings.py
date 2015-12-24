@@ -26,7 +26,7 @@ SECRET_KEY = 'zquwlaw0pn)c&*k%ixbk0*u#t%k(@(%+5i-&w_)vf%r!4+*tc*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.0']
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -71,7 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.request',
             ],
         },
     },
