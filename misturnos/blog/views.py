@@ -72,9 +72,13 @@ class Register(View):
         print dir(request)
         data = request.POST
         print data
-        userName = request.REQUEST.get('username', None)
-        userPass = request.REQUEST.get('password', None)
-        userMail = request.REQUEST.get('email', None)
+        try:
+            userName = request.REQUEST.get('username', None)
+            userPass = request.REQUEST.get('password', None)
+            userMail = request.REQUEST.get('email', None)
+        except Exception as e:
+            print e
+            return redirect('/')
 
         print userName
         print userPass
