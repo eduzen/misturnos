@@ -70,24 +70,28 @@ class Register(View):
     def post(self, request, *args, **kwargs):
         data = request.POST
         try:
-            print "edu"
-            print request
-            print dir(request)
-            print data
+            if not data:
+                return redirect('/register')
             userName = data.get('username', None)
             userPass = data.get('password', None)
             userMail = data.get('email', None)
-            user = User.objects.create_user(username=userName,
-                                            email=userMail,
-                                            password=userPass)
-            user.save()
+            if None in (userName, userPass, userMail):
+                print 'these fields cannot be empty: {0}, {1}, {2}'.format(
+                        userName,
+                        userPass,
+                        userMail)
+            if User.objects.filter(username=userName).exists():
+                print 'this username {0} already exists'.format(userName)
+            if User.objects.filter(usermail=userMail).exists():
+                print 'this email ({0}) already exists'.format(userMail)
+            else:
+                user = User.objects.create_user(username=userName,
+                                                email=userMail,
+                                                password=userPass)
+                user.save()
         except Exception as e:
             print e
             return redirect('/')
-
-        print userName
-        print userPass
-        print userMail
 
         return redirect('/')
 
