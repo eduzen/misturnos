@@ -11,10 +11,13 @@
 
           <div class="col-md-4" style="">
               <h2 class="form-signin-heading">REGISTRO</h2>
-              {% csrf_token %}
               <form id="post-form" class="form-signin" action="/register" method="post">
+              {% csrf_token %}
               {% crispy form %}
+              <div id="results"></div>
               </form>
+              <ul id="talk">
+              </ul>
           </div>
           <div class="col-md-4"></div>
         </div>
@@ -42,6 +45,34 @@
     <script src="{% static 'js/freelancer.js' %}"></script>
 
     <script>
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
     // Submit post on submit
     function create_post(){
       console.log("create post is working!"); // sanity check
@@ -58,6 +89,8 @@
             $('#post-text').val(''); // remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
+            $("#talk").prepend("<li><strong>"+json.text+"</strong> - <em> "+json.author+"</em> - <span> "+json.created+"</span></li>");
+    console.log("success");
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {

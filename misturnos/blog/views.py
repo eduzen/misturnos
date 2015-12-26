@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -7,10 +8,8 @@ from .models import Post
 from .forms import PostForm
 from .forms import UserForm
 from django.contrib.auth.models import User
-
-
-# Create your views here.
-
+from django.http import HttpResponse
+from django.core import serializers
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -68,34 +67,62 @@ def login(request):
 
 class Register(View):
     def post(self, request, *args, **kwargs):
+        print "\n Register"
         data = request.POST
+        if not data:
+            return redirect('/register')
+
         try:
-            if not data:
-                return redirect('/register')
-            userName = data.get('username', None)
-            userPass = data.get('password', None)
-            userMail = data.get('email', None)
-            if None in (userName, userPass, userMail):
-                print 'these fields cannot be empty: {0}, {1}, {2}'.format(
-                        userName,
-                        userPass,
-                        userMail)
+            success = False
+            form = UserForm(data)
+            # print "form : {}".format(form)
+            if not form.is_valid():
+                error = 'Sorry this is an invalid form'
+                ajax_vars = {'success': success, 'error': error}
+                return HttpResponse(
+                    json.dumps(ajax_vars),
+                    content_type='application/javascript'
+                )
+
+            print form.cleaned_data.keys()
+            print form.cleaned_data.values()
+
+            userName = form.cleaned_data.get('username', None)
+            userMail = form.cleaned_data.get('email', None)
+            userPass = form.cleaned_data.get('password', None)
+
             if User.objects.filter(username=userName).exists():
+                error = _('Sorry this username is already taken')
                 print 'this username {0} already exists'.format(userName)
-            if User.objects.filter(usermail=userMail).exists():
+            if User.objects.filter(email=userMail).exists():
+                error = _('Sorry this email is already taken')
                 print 'this email ({0}) already exists'.format(userMail)
             else:
-                user = User.objects.create_user(username=userName,
-                                                email=userMail,
-                                                password=userPass)
+                success = True
+                user = User.objects.create_user(
+                    username=userName,
+                    email=userMail,
+                    password=userPass
+                )
                 user.save()
+
+            ajax_vars = {'success': success, 'error': error}
+            return HttpResponse(
+                json.dumps(ajax_vars),
+                content_type='application/javascript'
+            )
         except Exception as e:
             print e
-            return redirect('/')
-
-        return redirect('/')
+            ajax_vars = {'success': success, 'error': e.message}
+            print ajax_vars
+            return HttpResponse(
+                json.dumps(ajax_vars),
+                content_type='application/javascript'
+            )
 
     def get(self, request, *args, **kwargs):
+        print "\n Register"
+
         form = UserForm()
 
         return render(request, 'blog/register.html', {'form': form})
