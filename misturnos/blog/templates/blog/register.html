@@ -87,16 +87,15 @@
         // handle a successful response
         success : function(json) {
             $('#post-text').val(''); // remove the value from the input
-            console.log(json); // log the returned json to the console
-            console.log("success"); // another sanity check
-            $("#talk").prepend("<li><strong>"+json.text+"</strong> - <em> "+json.author+"</em> - <span> "+json.created+"</span></li>");
-    console.log("success");
+            message = JSON.parse(json)['results'] // another sanity check
+            $('#results').html("<div class='alert-box alert radius' data-alert>"+ message +
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+          message = JSON.parse(xhr.responseText)['error']
+            $('#results').html("<div class='alert-box alert radius' data-alert>"+ message +
                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
       });
     };

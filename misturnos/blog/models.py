@@ -25,7 +25,7 @@ class Post(models.Model):
         self.published_date = timezone.now()
         self.save()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
 
 
@@ -63,7 +63,7 @@ class Profile(models.Model):
         verbose_name_plural = _("Profiles")
         ordering = ("user",)
 
-    def __str__(self):
+    def __unicode__(self):
         return u'<%s>' % self.user.username
 
 
@@ -116,7 +116,7 @@ class Project(models.Model):
         ordering = ("user", "name")
         unique_together = ("user", "name")
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s - %s" % (self.user, self.name)
 
 
