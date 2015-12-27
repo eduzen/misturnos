@@ -27,11 +27,6 @@ urlpatterns = [
 urlpatterns += [
     # url(r'^', include('django.contrib.auth.urls')),
     url(
-        r'^login/$',
-        auth_views.login,
-        {'template_name': 'blog/login.html'}
-        ),
-    url(
         r'^logout/$',
         auth_views.logout,
         {'template_name': 'blog/index.html'}

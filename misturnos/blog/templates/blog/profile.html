@@ -4,24 +4,25 @@
 {% block content %}
 
 <header>
-    <div class="container">
-    <div class="row">
-    <div class="col-md-4"></div>
+    <div class="container" style='{padding-top: 150px !important;}'>
+        <div class="row">
+          <div class="col-md-4"></div>
 
-    <div class="col-md-4">
+          <div class="col-md-4" style="">
+              <h2 class="form-signin-heading">Perfil {{ user }}</h2>
 
-    {% crispy form %}
+              {% crispy form %}
 
 
-    </div>
-
-    <div class="col-md-4"></div>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
     </div>
     </div>
 </header>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static '/js/ie10-viewport-bug-workaround.js' %}"></script>
-    <!-- jQuery -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <!-- jQuery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
@@ -39,4 +40,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'js/freelancer.js' %}"></script>
 
+
 {% endblock %}
+
+

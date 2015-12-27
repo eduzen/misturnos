@@ -11,10 +11,13 @@
 
           <div class="col-md-4" style="">
               <h2 class="form-signin-heading">REGISTRO</h2>
+              <form id="post-form" class="form-signin" action="/register" method="post">
               {% csrf_token %}
-              <form class="form-signin" action="/register" method="post">
               {% crispy form %}
+              <div id="results"></div>
               </form>
+              <ul id="talk">
+              </ul>
           </div>
           <div class="col-md-4"></div>
         </div>
@@ -23,7 +26,85 @@
 </header>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <!-- jQuery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
 
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="{% static 'js/classie.js' %}"></script>
+    <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'js/contact_me.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'js/freelancer.js' %}"></script>
+
+    <script>
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    // Submit post on submit
+    function create_register(){
+      console.log("create post is working!"); // sanity check
+      $.ajax({
+        url : "/register", // the endpoint
+        type : "POST", // http method
+        data : {
+          username : $('#id_username').val(),
+          password : $('#id_password').val(),
+          email : $('#id_email').val(),
+        }, // data sent with the post request
+        // handle a successful response
+        success : function(json) {
+            $('#post-text').val(''); // remove the value from the input
+            message = JSON.parse(json)['results'] // another sanity check
+            $('#results').html("<div class='alert-box alert radius' data-alert>"+ message +
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+        },
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+          message = JSON.parse(xhr.responseText)['error']
+            $('#results').html("<div class='alert-box alert radius' data-alert>"+ message +
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+        }
+      });
+    };
+    $('#post-form').on('submit', function(event){
+        event.preventDefault();
+        console.log("form submitted!");  // sanity check
+        create_register();
+    });
+    </script>
 {% endblock %}
 
 
