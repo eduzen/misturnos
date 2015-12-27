@@ -8,6 +8,23 @@ from django.contrib.auth.models import User
 from .models import Post
 
 
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+    helper = FormHelper()
+    helper.form_id = 'LoginForm'
+    helper.form_action = '/login'
+    helper.add_input(
+        Submit(
+               'submit',
+               'Registrarse',
+               css_class='btn btn-lg btn-primary btn-block'
+            )
+    )
+
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User

@@ -8,7 +8,10 @@ from django.utils import timezone
 from .models import Post
 from .forms import PostForm
 from .forms import UserForm
+from .forms import LoginForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
 
 
@@ -127,3 +130,25 @@ def logout(request):
 
 def change_password(request):
     return render(request, 'blog/change-password.html')
+
+
+class Login(View):
+    def post(self, request, *args, **kwargs):
+        print 'Algo'
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            print 'not none'
+            if user.is_active:
+                print 'is active'
+                auth_login(request, user)
+                return redirect('/home')
+
+        return redirect('/login')
+
+
+
+    def get(self, request, *args, **kwargs):
+        form = LoginForm()
+        return render(request, 'blog/login.html', {'form': form})
