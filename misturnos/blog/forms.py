@@ -55,3 +55,51 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'text',)
+
+
+class ProfileForm(forms.Form):
+    nombre = forms.CharField(
+        label='Nombre',
+        max_length=30,
+        required=False,
+    )
+    apellido = forms.CharField(
+        label='Apellido',
+        max_length=80,
+        required=False,
+    )
+    telefono = forms.CharField(
+        label='Telefono',
+        max_length=12,
+        required=False,
+    )
+    direccion = forms.CharField(
+        label='Direccion',
+        max_length=80,
+        required=False,
+    )
+    codigopostal = forms.CharField(
+        label='Codigo Postal',
+        max_length=80,
+        required=False,
+    )
+    profesion = forms.CharField(
+        label='Profesion',
+        max_length=80,
+        required=False,
+    )
+    empresa = forms.CharField(
+        label='Empresa',
+        max_length=80,
+        required=False,
+    )
+    helper = FormHelper()
+    helper.form_action = '/profile'
+    helper.form_method = 'post'
+    helper.add_input(
+        Submit(
+               'submit',
+               'Guardar',
+               css_class='btn btn-lg btn-primary btn-block'
+            )
+    )

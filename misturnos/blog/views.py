@@ -6,9 +6,13 @@ from django.shortcuts import redirect
 from django.views.generic import View
 from django.utils import timezone
 from .models import Post
+from .models import Profile
+from .models import Address
+from .models import Project
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
+from .forms import ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -147,8 +151,83 @@ class Login(View):
 
         return redirect('/login')
 
-
-
     def get(self, request, *args, **kwargs):
         form = LoginForm()
         return render(request, 'blog/login.html', {'form': form})
+
+
+class Perfil(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.POST
+            usuario = request.user
+
+            print data
+            print request.user
+            if data is None:
+                raise ValueError(u'Deben completarse todos los campos')
+
+            nombre = data['nombre']
+            telefono = data['telefono']
+            direccion = data['direccion']
+            profesion = data['profesion']
+            codigopostal = data['codigopostal']
+            apellido = data['apellido']
+            empresa = data['empresa']
+
+            perfil = Profile.objects.filter(user=usuario)
+
+            if perfil is None or len(perfil) == 0:
+                raise ValueError(u'Problemas con el perfil')
+
+            perfil = perfil[0]
+            print perfil
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+
+            perfil.phone_number = telefono
+            perfil.profession = profesion
+
+            perfil.save()
+            usuario.save()
+
+            proyecto = Project.objects.filter(user=perfil)
+
+            if proyecto.exists():
+                proyecto.name = empresa
+                proyecto.save()
+            else:
+                p = Project.objects.create(user=perfil, name=empresa)
+                p.save()
+
+            return redirect('/profile')
+
+        except ValueError as error:
+            print error
+            return redirect('/profile')
+
+    def get(self, request, *args, **kwargs):
+        usuario = request.user
+        perfil = Profile.objects.filter(user=usuario)
+
+        if perfil is None or len(perfil) == 0:
+            raise ValueError(u'Problemas con el perfil')
+
+        perfil = perfil[0]
+
+        proyecto = Project.objects.filter(user=perfil)
+
+        empresa = ''
+
+        if proyecto.exists():
+            empresa = proyecto[0].name
+
+        data = {
+            'nombre': usuario.first_name,
+            'telefono': perfil.phone_number,
+            'profesion': perfil.profession,
+            'empresa': empresa
+        }
+
+        form = ProfileForm(data)
+        return render(request, 'blog/profile.html',  {'form': form})
