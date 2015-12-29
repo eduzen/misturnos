@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^test$', views.test),
     url(r'^navbar$', views.testnavbar),
     url(r'^register$', views.Register.as_view()),
+    url(r'^calendar$', views.calendar),
 ]
