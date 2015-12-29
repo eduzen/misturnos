@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -7,6 +8,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+
+
+def get_image_path(instance, filename):
+    return os.path.join('users', str(instance.id), filename)
 
 
 class Post(models.Model):

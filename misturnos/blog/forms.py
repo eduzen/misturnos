@@ -103,3 +103,4 @@ class ProfileForm(forms.Form):
                css_class='btn btn-lg btn-primary btn-block'
             )
     )
+    avatar = forms.ImageField(required=False, label="Logo")
