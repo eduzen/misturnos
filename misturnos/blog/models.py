@@ -54,6 +54,11 @@ class Profile(models.Model):
         max_length=13,
         blank=True
     )
+    avatar = models.ImageField(
+        upload_to=get_image_path,
+        blank=True,
+        null=True
+    )
 
     # Custom Properties
     @property
