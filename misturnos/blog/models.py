@@ -11,7 +11,7 @@ from django.core.validators import RegexValidator
 
 
 def get_image_path(instance, filename):
-    return os.path.join('users', str(instance.id), filename)
+    return '/'.join(['user', instance.user.username, filename])
 
 
 class Post(models.Model):
@@ -42,6 +42,7 @@ class Profile(models.Model):
         verbose_name=_("user"),
         on_delete=models.CASCADE
         )
+
     # Attributes
     profession = models.CharField(max_length=100)
     phone_regex = RegexValidator(
@@ -64,8 +65,6 @@ class Profile(models.Model):
     @property
     def username(self):
         return self.user.username
-
-    # Methods
 
     # Meta and String
     class Meta:
