@@ -239,8 +239,10 @@ class Perfil(View):
             dire = direcciones[0].address
             codigopostal = direcciones[0].postal_code
 
-        pathtoimage = perfil.avatar.url
-
+        if perfil.avatar is None:
+            pathtoimage = 'static/img/default.jpg'
+        else:
+            pathtoimage = perfil.avatar.url
 
         data = {
             'nombre': usuario.first_name,
@@ -253,4 +255,5 @@ class Perfil(View):
         }
 
         form = ProfileForm(data)
-        return render(request, 'blog/profile.html',  {'form': form,'avatar':pathtoimage})
+        return render(request, 'blog/profile.html', {'form': form,
+                      'avatar': pathtoimage})
