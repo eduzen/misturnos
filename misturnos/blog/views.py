@@ -192,10 +192,10 @@ class Perfil(View):
             direcciones = Address.objects.filter(profile=perfil)
 
             if direcciones.exists():
-                direccion = direcciones[0]
-                direccion.address = direccion
-                direccion.postal_code = codigopostal
-                direccion.save()
+                dire = direcciones[0]
+                dire.address = direccion
+                dire.postal_code = codigopostal
+                dire.save()
             else:
                 d = Address.objects.create(address=direccion, profile=perfil)
                 d.postal_code = codigopostal
@@ -221,7 +221,7 @@ class Perfil(View):
         usuario = request.user
         perfil = Profile.objects.filter(user=usuario)
 
-        if perfil is None or len(perfil) == 0:
+        if not perfil.exists():
             raise ValueError(u'Problemas con el perfil')
 
         perfil = perfil[0]
@@ -233,9 +233,19 @@ class Perfil(View):
         if proyecto.exists():
             empresa = proyecto[0].name
 
+        direcciones = Address.objects.filter(profile=perfil)
+
+        if direcciones.exists():
+            dire = direcciones[0].address
+            codigopostal = direcciones[0].postal_code
+
+
         data = {
             'nombre': usuario.first_name,
+            'apellido': usuario.last_name,
             'telefono': perfil.phone_number,
+            'direccion': dire,
+            'codigopostal': codigopostal,
             'profesion': perfil.profession,
             'empresa': empresa
         }
