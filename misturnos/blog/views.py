@@ -78,13 +78,14 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
+            print request.POST
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
             form = UserForm(data)
 
             if not form.is_valid():
-                raise ValueError(u'Username o password invalido')
+                raise ValueError(u'Username invalido')
 
             userName = form.cleaned_data.get('username', None)
             userMail = form.cleaned_data.get('email', None)
@@ -110,7 +111,7 @@ class Register(View):
                 )
             user.save()
 
-            ajax_vars = {'success': True, 'results': u'Usuario creado!'}
+            ajax_vars = {'success': True, 'error': 'Usuario creado!'}
             return HttpResponse(
                 json.dumps(ajax_vars),
                 content_type='application/javascript'
@@ -162,8 +163,6 @@ class Perfil(View):
             data = request.POST
             usuario = request.user
 
-            print data
-            print request.user
             if data is None:
                 raise ValueError(u'Deben completarse todos los campos')
 
@@ -181,12 +180,21 @@ class Perfil(View):
                 raise ValueError(u'Problemas con el perfil')
 
             perfil = perfil[0]
-            print perfil
+
             usuario.first_name = nombre
             usuario.last_name = apellido
 
             perfil.phone_number = telefono
             perfil.profession = profesion
+
+            direcciones = Address.objects.filter(profile=profile)
+
+            if direcciones.exists():
+                direcciones = direcciones[0]
+                direcciones.save()
+            else:
+                d = Address.objects.create(address=direccion)
+                d.save()
 
             perfil.save()
             usuario.save()
@@ -194,6 +202,7 @@ class Perfil(View):
             proyecto = Project.objects.filter(user=perfil)
 
             if proyecto.exists():
+                proyecto = proyecto[0]
                 proyecto.name = empresa
                 proyecto.save()
             else:
