@@ -162,8 +162,6 @@ class Perfil(View):
             data = request.POST
             usuario = request.user
 
-            print data
-            print request.user
             if data is None:
                 raise ValueError(u'Deben completarse todos los campos')
 
@@ -181,12 +179,21 @@ class Perfil(View):
                 raise ValueError(u'Problemas con el perfil')
 
             perfil = perfil[0]
-            print perfil
+
             usuario.first_name = nombre
             usuario.last_name = apellido
 
             perfil.phone_number = telefono
             perfil.profession = profesion
+
+            direcciones = Address.objects.filter(profile=profile)
+
+            if direcciones.exists():
+                direcciones = direcciones[0]
+                direcciones.save()
+            else:
+                d = Address.objects.create(address=direccion)
+                d.save()
 
             perfil.save()
             usuario.save()
@@ -194,6 +201,7 @@ class Perfil(View):
             proyecto = Project.objects.filter(user=perfil)
 
             if proyecto.exists():
+                proyecto = proyecto[0]
                 proyecto.name = empresa
                 proyecto.save()
             else:
