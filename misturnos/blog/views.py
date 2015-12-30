@@ -239,7 +239,7 @@ class Perfil(View):
             dire = direcciones[0].address
             codigopostal = direcciones[0].postal_code
 
-        if perfil.avatar is None:
+        if not perfil.avatar:
             pathtoimage = 'static/img/default.jpg'
         else:
             pathtoimage = perfil.avatar.url

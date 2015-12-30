@@ -58,6 +58,7 @@ class PostForm(forms.ModelForm):
 
 
 class ProfileForm(forms.Form):
+    avatar = forms.ImageField(required=False, label="avatar")
     nombre = forms.CharField(
         label='Nombre',
         max_length=30,
@@ -103,4 +104,3 @@ class ProfileForm(forms.Form):
                css_class='btn btn-lg btn-primary btn-block'
             )
     )
-    avatar = forms.ImageField(required=False, label="Logo")
