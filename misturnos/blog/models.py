@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -7,6 +8,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+
+
+def get_image_path(instance, filename):
+    return '/'.join(['user', instance.user.username, filename])
 
 
 class Post(models.Model):
@@ -37,6 +42,7 @@ class Profile(models.Model):
         verbose_name=_("user"),
         on_delete=models.CASCADE
         )
+
     # Attributes
     profession = models.CharField(max_length=100)
     phone_regex = RegexValidator(
@@ -49,13 +55,16 @@ class Profile(models.Model):
         max_length=13,
         blank=True
     )
+    avatar = models.ImageField(
+        upload_to=get_image_path,
+        blank=True,
+        null=True
+    )
 
     # Custom Properties
     @property
     def username(self):
         return self.user.username
-
-    # Methods
 
     # Meta and String
     class Meta:

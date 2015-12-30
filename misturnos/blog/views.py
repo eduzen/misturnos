@@ -7,9 +7,16 @@ from django.shortcuts import redirect
 from django.views.generic import View
 from django.utils import timezone
 from .models import Post
+from .models import Profile
+from .models import Address
+from .models import Project
 from .forms import PostForm
 from .forms import UserForm
+from .forms import LoginForm
+from .forms import ProfileForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
@@ -105,7 +112,7 @@ class Register(View):
                 )
             user.save()
 
-            ajax_vars = {'success': True, 'results': u'Usuario creado!'}
+            ajax_vars = {'success': True, 'error': 'Usuario creado!'}
             return HttpResponse(
                 json.dumps(ajax_vars),
                 content_type='application/javascript'
@@ -130,9 +137,132 @@ def logout(request):
 def change_password(request):
     return render(request, 'blog/change-password.html')
 
-
 def calendar(request):
     date = datetime.datetime(2015, 4, 1)
 
     return render(request, 'blog/calendar.html', {'date': date})
     return render(request, 'schedule/calendar.html')  # , {'date': date})
+
+
+
+class Login(View):
+    def post(self, request, *args, **kwargs):
+        print 'Algo'
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            print 'not none'
+            if user.is_active:
+                print 'is active'
+                auth_login(request, user)
+                return redirect('/home')
+
+        return redirect('/login')
+
+    def get(self, request, *args, **kwargs):
+        form = LoginForm()
+        return render(request, 'blog/login.html', {'form': form})
+
+
+class Perfil(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.POST
+            usuario = request.user
+
+            if data is None:
+                raise ValueError(u'Deben completarse todos los campos')
+
+            nombre = data['nombre']
+            telefono = data['telefono']
+            direccion = data['direccion']
+            profesion = data['profesion']
+            codigopostal = data['codigopostal']
+            apellido = data['apellido']
+            empresa = data['empresa']
+            # consulta la tabla profile y trae el perfil del usuario logueado
+            perfil = Profile.objects.filter(user=usuario)
+
+            if not perfil.exists():
+                raise ValueError(u'Problemas con el perfil')
+
+            perfil = perfil[0]
+
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+
+            perfil.phone_number = telefono
+            perfil.profession = profesion
+
+            perfil.save()
+            usuario.save()
+
+            direcciones = Address.objects.filter(profile=perfil)
+
+            if direcciones.exists():
+                dire = direcciones[0]
+                dire.address = direccion
+                dire.postal_code = codigopostal
+                dire.save()
+            else:
+                d = Address.objects.create(address=direccion, profile=perfil)
+                d.postal_code = codigopostal
+                d.save()
+
+            proyecto = Project.objects.filter(user=perfil)
+
+            if proyecto.exists():
+                proyecto = proyecto[0]
+                proyecto.name = empresa
+                proyecto.save()
+            else:
+                p = Project.objects.create(user=perfil, name=empresa)
+                p.save()
+
+            return redirect('/profile')
+
+        except ValueError as error:
+            print error
+            return redirect('/profile')
+
+    def get(self, request, *args, **kwargs):
+        usuario = request.user
+        perfil = Profile.objects.filter(user=usuario)
+
+        if not perfil.exists():
+            raise ValueError(u'Problemas con el perfil')
+
+        perfil = perfil[0]
+
+        proyecto = Project.objects.filter(user=perfil)
+
+        empresa = ''
+
+        if proyecto.exists():
+            empresa = proyecto[0].name
+
+        direcciones = Address.objects.filter(profile=perfil)
+
+        if direcciones.exists():
+            dire = direcciones[0].address
+            codigopostal = direcciones[0].postal_code
+
+        if not perfil.avatar:
+            pathtoimage = 'static/img/default.jpg'
+        else:
+            pathtoimage = perfil.avatar.url
+
+        data = {
+            'nombre': usuario.first_name,
+            'apellido': usuario.last_name,
+            'telefono': perfil.phone_number,
+            'direccion': dire,
+            'codigopostal': codigopostal,
+            'profesion': perfil.profession,
+            'empresa': empresa
+        }
+
+        form = ProfileForm(data)
+        return render(request, 'blog/profile.html', {'form': form,
+                      'avatar': pathtoimage})
