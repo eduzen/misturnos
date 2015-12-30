@@ -1,5 +1,7 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 from . import views
+from django.contrib.auth.decorators import login_required
+
 
 urlpatterns = [
     url(r'^$', views.index),
@@ -10,5 +12,7 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^test$', views.test),
     url(r'^navbar$', views.testnavbar),
-    url(r'^register$', views.register),
+    url(r'^register$', views.Register.as_view()),
+    url(r'^login$', views.Login.as_view()),
+    url(r'^profile$', login_required(views.Perfil.as_view())),
 ]

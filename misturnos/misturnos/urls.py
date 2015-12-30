@@ -28,14 +28,9 @@ urlpatterns = [
 urlpatterns += [
     # url(r'^', include('django.contrib.auth.urls')),
     url(
-        r'^login/$',
-        auth_views.login,
-        {'template_name': 'blog/login.html'}
-        ),
-    url(
         r'^logout/$',
         auth_views.logout,
-        {'template_name': 'blog/logout.html'}
+        {'template_name': 'blog/index.html'}
         ),
     url(
         r'^change-password/$',
@@ -43,4 +38,3 @@ urlpatterns += [
         {'template_name': 'blog/change-password.html'}
     )
 ]
-
