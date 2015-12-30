@@ -78,13 +78,14 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
+            print request.POST
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
             form = UserForm(data)
 
             if not form.is_valid():
-                raise ValueError(u'Username o password invalido')
+                raise ValueError(u'Username invalido')
 
             userName = form.cleaned_data.get('username', None)
             userMail = form.cleaned_data.get('email', None)
@@ -110,7 +111,7 @@ class Register(View):
                 )
             user.save()
 
-            ajax_vars = {'success': True, 'results': u'Usuario creado!'}
+            ajax_vars = {'success': True, 'error': 'Usuario creado!'}
             return HttpResponse(
                 json.dumps(ajax_vars),
                 content_type='application/javascript'
