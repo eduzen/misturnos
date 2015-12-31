@@ -244,6 +244,9 @@ class Perfil(View):
 
         direcciones = Address.objects.filter(profile=perfil)
 
+        dire = ''
+        codigopostal = ''
+
         if direcciones.exists():
             dire = direcciones[0].address
             codigopostal = direcciones[0].postal_code

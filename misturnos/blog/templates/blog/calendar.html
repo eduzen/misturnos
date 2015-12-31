@@ -2,32 +2,27 @@
 {% load i18n staticfiles %}
 {% load scheduletags %}
 
-{% block extra_head %}
-<link rel='stylesheet' type='text/css' href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css" />
-<script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
+{% block extrahead %}
 {% endblock %}
 
 {% block content %}
+<span>
+    <br>
+</span>
+<section id="header">
+    <div class="container">
+        <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
 
-    <br />
-    <br />
-    <br />
-    <br />
-    <h1>Edu</h1>
-    <div id="calendar">
-        <p>Hola {{ date }}</p>
-        {% querystring_for_date date %}
+            <div id="calendar"></div>
+
+        </div>
+        <div class="col-md-1"></div>
+
+        </div>
     </div>
-    <script type='text/javascript'>
-    $(document).ready(function() {
-        // page is now ready, initialize the calendar...
-        $('#calendar').fullCalendar({
-            // put your options and callbacks    here
-          events: '/schedule/api/occurrences?calendar_slug=example'
-        })
-    });
-    </script>
-
+</section>
     <!-- jQuery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
@@ -45,5 +40,29 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'js/freelancer.js' %}"></script>
+    <script src="{% static 'moment/moment.js' %}"></script>
+    <script src="{% static 'fullcalendar/dist/fullcalendar.min.js' %}"></script>
 
+    <script type='text/javascript'>
+    $(document).ready(function() {
+        // page is now ready, initialize the calendar...
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $('#calendar').fullCalendar({
+        header: {
+            weekends: false,
+            left: 'prev,next today',
+            center: 'title',
+            right: 'agendaWeek,agendaDay,month',
+        },
+        editable: true,
+        dayClick: function() {
+            alert('a day has been clicked!');
+        }
+         });
+    });
+    </script>
 {% endblock %}
