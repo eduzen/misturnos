@@ -73,7 +73,7 @@ class Profile(models.Model):
         ordering = ("user",)
 
     def __unicode__(self):
-        return u'<%s>' % self.user.username
+        return u'<%s>' % self.user.username or u''
 
 
 class Address(models.Model):
