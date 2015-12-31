@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
+from django.conf import settings
 
 
 def post_list(request):
@@ -161,17 +162,20 @@ class Perfil(View):
         try:
             data = request.POST
             usuario = request.user
+            files = request.FILES
 
             if data is None:
                 raise ValueError(u'Deben completarse todos los campos')
 
-            nombre = data['nombre']
-            telefono = data['telefono']
-            direccion = data['direccion']
-            profesion = data['profesion']
-            codigopostal = data['codigopostal']
-            apellido = data['apellido']
-            empresa = data['empresa']
+            nombre = data.get('nombre', None)
+            telefono = data.get('telefono', None)
+            direccion = data.get('direccion', None)
+            profesion = data.get('profesion', None)
+            codigopostal = data.get('codigopostal', None)
+            apellido = data.get('apellido', None)
+            empresa = data.get('empresa', None)
+            avatar = files.get('avatar', None)
+            print avatar
             # consulta la tabla profile y trae el perfil del usuario logueado
             perfil = Profile.objects.filter(user=usuario)
 
@@ -185,6 +189,9 @@ class Perfil(View):
 
             perfil.phone_number = telefono
             perfil.profession = profesion
+
+            if avatar is not None:
+                perfil.avatar = avatar
 
             perfil.save()
             usuario.save()
@@ -229,6 +236,8 @@ class Perfil(View):
         proyecto = Project.objects.filter(user=perfil)
 
         empresa = ''
+        dire = ''
+        codigopostal = ''
 
         if proyecto.exists():
             empresa = proyecto[0].name
@@ -242,7 +251,7 @@ class Perfil(View):
         if not perfil.avatar:
             pathtoimage = 'static/img/default.jpg'
         else:
-            pathtoimage = perfil.avatar.url
+            pathtoimage = "media/%s" % (perfil.avatar.url)
 
         data = {
             'nombre': usuario.first_name,
@@ -257,3 +266,8 @@ class Perfil(View):
         form = ProfileForm(data)
         return render(request, 'blog/profile.html', {'form': form,
                       'avatar': pathtoimage})
+
+    def handle_uploaded_file(self, f):
+        with open(f, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
