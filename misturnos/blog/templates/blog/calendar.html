@@ -41,27 +41,34 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static 'js/freelancer.js' %}"></script>
     <script src="{% static 'moment/moment.js' %}"></script>
+    <script src="{% static 'lib/jquery-ui.custom-datepicker.js' %}"></script>
     <script src="{% static 'fullcalendar/dist/fullcalendar.min.js' %}"></script>
-
+    <script src="{% static 'fullcalendar/dist/lang/gcal.js' %}"></script>
+    <script src="{% static 'fullcalendar/dist/lang/es.js' %}"></script>
     <script type='text/javascript'>
     $(document).ready(function() {
         // page is now ready, initialize the calendar...
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-
         $('#calendar').fullCalendar({
-        header: {
+            lang: 'es',
             weekends: false,
-            left: 'prev,next today',
-            center: 'title',
-            right: 'agendaWeek,agendaDay,month',
-        },
-        editable: true,
-        dayClick: function() {
-            alert('a day has been clicked!');
-        }
+            googleCalendarApiKey: 'AIzaSyARIajrk27-YXMKtVHCoXqQc1fsNiqRozo',
+            eventSources: [
+                {
+                    googleCalendarId: '9qoqs850pidfgn4cmhgj3r2cbs@group.calendar.google.com'
+                },
+                {
+                    googleCalendarId: 'es.ar#holiday@group.v.calendar.google.com'
+                },
+            ],
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'agendaWeek,agendaDay,month',
+            },
+            editable: true,
+            dayClick: function() {
+                alert('a day has been clicked!');
+            }
          });
     });
     </script>
