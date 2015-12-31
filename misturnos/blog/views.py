@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.utils import timezone
+from django.conf import settings
 from .models import Post
 from .models import Profile
 from .models import Address
@@ -80,13 +81,14 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
+            
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
             form = UserForm(data)
 
             if not form.is_valid():
-                raise ValueError(u'Username o password invalido')
+                raise ValueError(u'Username invalido')
 
             userName = form.cleaned_data.get('username', None)
             userMail = form.cleaned_data.get('email', None)
@@ -170,17 +172,20 @@ class Perfil(View):
         try:
             data = request.POST
             usuario = request.user
+            files = request.FILES
 
             if data is None:
                 raise ValueError(u'Deben completarse todos los campos')
 
-            nombre = data['nombre']
-            telefono = data['telefono']
-            direccion = data['direccion']
-            profesion = data['profesion']
-            codigopostal = data['codigopostal']
-            apellido = data['apellido']
-            empresa = data['empresa']
+            nombre = data.get('nombre', None)
+            telefono = data.get('telefono', None)
+            direccion = data.get('direccion', None)
+            profesion = data.get('profesion', None)
+            codigopostal = data.get('codigopostal', None)
+            apellido = data.get('apellido', None)
+            empresa = data.get('empresa', None)
+            avatar = files.get('avatar', None)
+            
             # consulta la tabla profile y trae el perfil del usuario logueado
             perfil = Profile.objects.filter(user=usuario)
 
@@ -194,6 +199,9 @@ class Perfil(View):
 
             perfil.phone_number = telefono
             perfil.profession = profesion
+
+            if avatar is not None:
+                perfil.avatar = avatar
 
             perfil.save()
             usuario.save()
@@ -238,14 +246,13 @@ class Perfil(View):
         proyecto = Project.objects.filter(user=perfil)
 
         empresa = ''
+        dire = ''
+        codigopostal = ''
 
         if proyecto.exists():
             empresa = proyecto[0].name
 
         direcciones = Address.objects.filter(profile=perfil)
-
-        dire = ''
-        codigopostal = ''
 
         if direcciones.exists():
             dire = direcciones[0].address
@@ -254,7 +261,7 @@ class Perfil(View):
         if not perfil.avatar:
             pathtoimage = 'static/img/default.jpg'
         else:
-            pathtoimage = perfil.avatar.url
+            pathtoimage = "media/%s" % (perfil.avatar.url)
 
         data = {
             'nombre': usuario.first_name,
@@ -269,3 +276,8 @@ class Perfil(View):
         form = ProfileForm(data)
         return render(request, 'blog/profile.html', {'form': form,
                       'avatar': pathtoimage})
+
+    def handle_uploaded_file(self, f):
+        with open(f, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
