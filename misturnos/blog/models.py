@@ -41,7 +41,7 @@ class Paciente(models.Model):
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=30)
     email = models.CharField(max_length=50)
-
+    notas = models.CharField(max_length=300, blank=True, null=True)
     telefono = models.IntegerField(default=20)
     obraSocial = models.CharField(max_length=50)
     fechaNacimiento = models.DateTimeField(

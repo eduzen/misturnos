@@ -122,24 +122,25 @@ class PacientesForm(forms.Form):
         max_length=12,
         required=False,
     )
-    direccion = forms.CharField(
-        label='Direccion',
+    email = forms.CharField(
+        label='Email',
         max_length=80,
         required=False,
     )
-    codigopostal = forms.CharField(
-        label='Codigo Postal',
+    obraSocial = forms.CharField(
+        label='Obra Social',
         max_length=80,
         required=False,
     )
-    profesion = forms.CharField(
-        label='Profesion',
+    edad = forms.CharField(
+        label='edad',
         max_length=80,
         required=False,
     )
-    empresa = forms.CharField(
-        label='Empresa',
-        max_length=80,
+    notas = forms.CharField(
+        widget=forms.Textarea(),
+        label='Notas',
+        max_length=90,
         required=False,
     )
     helper = FormHelper()
