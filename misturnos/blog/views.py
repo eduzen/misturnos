@@ -176,7 +176,7 @@ class Perfil(View):
             apellido = data.get('apellido', None)
             empresa = data.get('empresa', None)
             avatar = files.get('avatar', None)
-            print avatar
+
             # consulta la tabla profile y trae el perfil del usuario logueado
             perfil = Profile.objects.filter(user=usuario)
 
@@ -252,7 +252,7 @@ class Perfil(View):
         if not perfil.avatar:
             pathtoimage = 'static/img/default.jpg'
         else:
-            pathtoimage = "media/%s" % (perfil.avatar.url)
+            pathtoimage = perfil.avatar.url
 
         data = {
             'nombre': usuario.first_name,
