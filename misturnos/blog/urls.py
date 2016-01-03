@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^register$', views.Register.as_view()),
     url(r'^login$', views.Login.as_view()),
     url(r'^profile$', login_required(views.Perfil.as_view())),
+    url(r'^pacientes$', login_required(views.ListaPacientes.as_view())),
 ]
