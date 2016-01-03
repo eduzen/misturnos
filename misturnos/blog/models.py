@@ -33,24 +33,24 @@ class Post(models.Model):
     def __unicode__(self):
         return self.title
 
-class Pacientes(models.Model):
+
+class Paciente(models.Model):
     # Relations
-    perfil = models.ForeignKey(User)
+    medicoacargo = models.ForeignKey(User)
     # Attributes
-    title = models.CharField(max_length=200)
-    text = models.TextField()
-    created_date = models.DateTimeField(
-            default=timezone.now)
-    published_date = models.DateTimeField(
+    nombre = models.CharField(max_length=30)
+    apellido = models.CharField(max_length=30)
+    email = models.CharField(max_length=50)
+
+    telefono = models.IntegerField(default=20)
+    obraSocial = models.CharField(max_length=50)
+    fechaNacimiento = models.DateTimeField(
             blank=True, null=True)
 
     # Methods
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
+    def edad(self):
+        return timezone.now() - fechaNacimiento
 
-    def __unicode__(self):
-        return self.title
 
 
 class Profile(models.Model):

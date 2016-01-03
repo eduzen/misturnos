@@ -9,7 +9,7 @@ from .models import Post
 from .models import Profile
 from .models import Address
 from .models import Project
-from .models import Pacientes
+from .models import Paciente
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
