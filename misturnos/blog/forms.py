@@ -106,20 +106,20 @@ class ProfileForm(forms.Form):
     )
 
 
-class PacientesForm(forms.Form):
-    nombre = forms.CharField(
+class PatientsForm(forms.Form):
+    name = forms.CharField(
         label='Nombre',
         max_length=30,
         required=False,
     )
-    apellido = forms.CharField(
+    last_name = forms.CharField(
         label='Apellido',
         max_length=80,
         required=False,
     )
-    telefono = forms.CharField(
+    phone_number = forms.CharField(
         label='Telefono',
-        max_length=12,
+        max_length=26,
         required=False,
     )
     email = forms.CharField(
@@ -127,20 +127,20 @@ class PacientesForm(forms.Form):
         max_length=80,
         required=False,
     )
-    obraSocial = forms.CharField(
+    medical_coverage = forms.CharField(
         label='Obra Social',
         max_length=80,
         required=False,
     )
-    edad = forms.CharField(
-        label='edad',
+    born_date = forms.CharField(
+        label='Fecha de Nacimiento',
         max_length=80,
         required=False,
     )
-    notas = forms.CharField(
+    notes = forms.CharField(
         widget=forms.Textarea(),
         label='Notas',
-        max_length=90,
+        max_length=600,
         required=False,
     )
     helper = FormHelper()

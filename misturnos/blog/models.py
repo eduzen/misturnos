@@ -34,23 +34,34 @@ class Post(models.Model):
         return self.title
 
 
-class Paciente(models.Model):
+class Patient(models.Model):
     # Relations
-    medicoacargo = models.ForeignKey(User)
+    doctor = models.ForeignKey(User)
     # Attributes
-    nombre = models.CharField(max_length=30)
-    apellido = models.CharField(max_length=30)
-    email = models.CharField(max_length=50)
-    notas = models.CharField(max_length=300, blank=True, null=True)
-    telefono = models.IntegerField(default=20)
-    obraSocial = models.CharField(max_length=50)
-    fechaNacimiento = models.DateTimeField(
+    name = models.CharField(verbose_name=(u'Nombre'),
+                            max_length=50)
+    last_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    notes = models.CharField(max_length=600, blank=True, null=True)
+    medical_coverage = models.CharField(max_length=100,
+                                        blank=True, null=True)
+    born_date = models.DateTimeField(
             blank=True, null=True)
+    phone_regex = RegexValidator(
+        regex=r'^\d{8,13}$',
+        message="Phone number must be entered in the format: '99999999'."
+        "Hasta 13 digits permitidos."
+    )
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=26,
+        blank=True
+    )
 
     # Methods
+    @property
     def edad(self):
-        return timezone.now() - fechaNacimiento
-
+        return timezone.now() - self.born_date
 
 
 class Profile(models.Model):

@@ -9,12 +9,12 @@ from .models import Post
 from .models import Profile
 from .models import Address
 from .models import Project
-from .models import Paciente
+from .models import Patient
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
 from .forms import ProfileForm
-from .forms import PacientesForm
+from .forms import PatientsForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -276,66 +276,32 @@ class Perfil(View):
                 destination.write(chunk)
 
 
-class ListaPacientes(View):
+class Patients(View):
     def post(self, request, *args, **kwargs):
         try:
             data = request.POST
             usuario = request.user
-            files = request.FILES
 
             if data is None:
                 raise ValueError(u'Deben completarse todos los campos')
 
-            nombre = data.get('nombre', None)
-            telefono = data.get('telefono', None)
-            direccion = data.get('direccion', None)
-            profesion = data.get('profesion', None)
-            codigopostal = data.get('codigopostal', None)
-            apellido = data.get('apellido', None)
-            empresa = data.get('empresa', None)
-            avatar = files.get('avatar', None)
+            name = data.get('name', None)
+            last_name = data.get('last_name', None)
+            phone_number = data.get('phone_number', None)
+            email = data.get('email', None)
+            medical_coverage = data.get('medical_coverage', None)
+            notes = data.get('notes', None)
 
-            # consulta la tabla profile y trae el perfil del usuario logueado
-            perfil = Profile.objects.filter(user=usuario)
+            patient = Patient.objects.create(doctor=usuario)
+            patient.doctor = usuario
+            patient.name = name
+            patient.last_name = last_name
+            patient.email = email
+            patient.phone_number = phone_number
+            patient.medical_coverage = medical_coverage
+            patient.notes = notes
 
-            if not perfil.exists():
-                raise ValueError(u'Problemas con el perfil')
-
-            perfil = perfil[0]
-
-            usuario.first_name = nombre
-            usuario.last_name = apellido
-
-            perfil.phone_number = telefono
-            perfil.profession = profesion
-
-            if avatar is not None:
-                perfil.avatar = avatar
-
-            perfil.save()
-            usuario.save()
-
-            direcciones = Address.objects.filter(profile=perfil)
-
-            if direcciones.exists():
-                dire = direcciones[0]
-                dire.address = direccion
-                dire.postal_code = codigopostal
-                dire.save()
-            else:
-                d = Address.objects.create(address=direccion, profile=perfil)
-                d.postal_code = codigopostal
-                d.save()
-
-            proyecto = Project.objects.filter(user=perfil)
-
-            if proyecto.exists():
-                proyecto = proyecto[0]
-                proyecto.name = empresa
-                proyecto.save()
-            else:
-                p = Project.objects.create(user=perfil, name=empresa)
-                p.save()
+            patient.save()
 
             return redirect('/pacientes')
 
@@ -344,44 +310,5 @@ class ListaPacientes(View):
             return redirect('/pacientes')
 
     def get(self, request, *args, **kwargs):
-        usuario = request.user
-        perfil = Profile.objects.filter(user=usuario)
-
-        if not perfil.exists():
-            raise ValueError(u'Problemas con el perfil')
-
-        perfil = perfil[0]
-
-        proyecto = Project.objects.filter(user=perfil)
-
-        empresa = ''
-        dire = ''
-        codigopostal = ''
-
-        if proyecto.exists():
-            empresa = proyecto[0].name
-
-        direcciones = Address.objects.filter(profile=perfil)
-
-        if direcciones.exists():
-            dire = direcciones[0].address
-            codigopostal = direcciones[0].postal_code
-
-        data = {
-            'nombre': usuario.first_name,
-            'apellido': usuario.last_name,
-            'telefono': perfil.phone_number,
-            'direccion': dire,
-            'codigopostal': codigopostal,
-            'profesion': perfil.profession,
-            'empresa': empresa
-        }
-
-        form = PacientesForm(data)
-
+        form = PatientsForm()
         return render(request, 'blog/pacientes.html', {'form': form})
-
-    def handle_uploaded_file(self, f):
-        with open(f, 'wb+') as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
