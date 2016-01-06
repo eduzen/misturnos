@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^profile$', login_required(views.Perfil.as_view())),
     url(r'^pacientes$', login_required(views.Patients.as_view())),
     url(r'^lista-pacientes$', login_required(views.PatientsList.as_view())),
+    url(r'^lista-pacientes-test$', login_required(views.PatientsListTest.as_view())),
+
 ]
