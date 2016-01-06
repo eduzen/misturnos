@@ -132,9 +132,11 @@ class PatientsForm(forms.Form):
         max_length=80,
         required=False,
     )
-    born_date = forms.CharField(
+    born_date = forms.DateField(
+        widget=forms.TextInput(attrs={
+                                    'type': 'date'
+                               }),
         label='Fecha de Nacimiento',
-        max_length=80,
         required=False,
     )
     notes = forms.CharField(

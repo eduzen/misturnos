@@ -291,6 +291,7 @@ class Patients(View):
             email = data.get('email', None)
             medical_coverage = data.get('medical_coverage', None)
             notes = data.get('notes', None)
+            born_date = data.get('born_date', None)
 
             patient = Patient.objects.create(doctor=usuario)
             patient.doctor = usuario
@@ -300,6 +301,7 @@ class Patients(View):
             patient.phone_number = phone_number
             patient.medical_coverage = medical_coverage
             patient.notes = notes
+            patient.born_date = born_date
 
             patient.save()
 
