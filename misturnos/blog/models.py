@@ -64,6 +64,22 @@ class Patient(models.Model):
         return timezone.now() - self.born_date
 
 
+class Appointment(models.Model):
+    # Relations
+    doctor = models.ForeignKey(User)
+    patient = models.ForeignKey(Patient)
+    # Attributes
+    appointment_date = models.DateTimeField(
+                    blank=False, null=False)
+    confirm = models.BooleanField(default=False)
+    sms_sent = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
+    first_time = models.BooleanField(default=True)
+
+
+
+
+
 class Profile(models.Model):
     # Relations
     user = models.OneToOneField(
@@ -164,3 +180,5 @@ def create_profile_for_new_user(sender, created, instance, **kwargs):
     if created:
         profile = Profile(user=instance)
         profile.save()
+
+
