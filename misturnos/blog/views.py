@@ -81,7 +81,7 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
-            
+
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
@@ -139,12 +139,12 @@ def logout(request):
 def change_password(request):
     return render(request, 'blog/change-password.html')
 
+
 def calendar(request):
     date = datetime.datetime(2015, 4, 1)
 
     return render(request, 'blog/calendar.html', {'date': date})
     return render(request, 'schedule/calendar.html')  # , {'date': date})
-
 
 
 class Login(View):
@@ -185,7 +185,7 @@ class Perfil(View):
             apellido = data.get('apellido', None)
             empresa = data.get('empresa', None)
             avatar = files.get('avatar', None)
-            
+
             # consulta la tabla profile y trae el perfil del usuario logueado
             perfil = Profile.objects.filter(user=usuario)
 
@@ -281,3 +281,10 @@ class Perfil(View):
         with open(f, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
+
+
+class Appointment(View):
+    def post(self, request, *args, **kwargs):
+        print 'Appointment POST'
+        data = request.POST
+        print data.values()

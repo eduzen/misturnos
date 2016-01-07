@@ -3,6 +3,9 @@ $(document).ready(function() {
 $('#calendar').fullCalendar({
     lang: 'es',
     weekends: false,
+    aspectRatio: 1,
+    minTime: '09:00',
+    maxTime: '19:00',
     googleCalendarApiKey: 'AIzaSyARIajrk27-YXMKtVHCoXqQc1fsNiqRozo',
     eventSources: [
         {
@@ -63,5 +66,4 @@ $('#calendar').fullCalendar({
     },
 
  });
-var utc = $.fullCalendar.moment.utc('2015-01-01T12:00:00');
 });
