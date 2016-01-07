@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.utils import timezone
+from django.conf import settings
 from .models import Post
 from .models import Profile
 from .models import Address
@@ -17,7 +19,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
-from django.conf import settings
+from django.core.urlresolvers import reverse
 
 
 def post_list(request):
@@ -79,7 +81,7 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
-            print request.POST
+            
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
@@ -137,6 +139,13 @@ def logout(request):
 def change_password(request):
     return render(request, 'blog/change-password.html')
 
+def calendar(request):
+    date = datetime.datetime(2015, 4, 1)
+
+    return render(request, 'blog/calendar.html', {'date': date})
+    return render(request, 'schedule/calendar.html')  # , {'date': date})
+
+
 
 class Login(View):
     def post(self, request, *args, **kwargs):
@@ -176,7 +185,7 @@ class Perfil(View):
             apellido = data.get('apellido', None)
             empresa = data.get('empresa', None)
             avatar = files.get('avatar', None)
-            print avatar
+            
             # consulta la tabla profile y trae el perfil del usuario logueado
             perfil = Profile.objects.filter(user=usuario)
 
