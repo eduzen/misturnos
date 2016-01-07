@@ -18,7 +18,7 @@ $('#calendar').fullCalendar({
     businessHours:{
         start: '10:00', // a start time (10am in this example)
         end: '18:00', // an end time (6pm in this example)
-        dow: [ 1, 2, 4, 5 ]
+        dow: [ 1, 2, 3, 4, 5 ]
         // days of week. an array of zero-based day of week integers (0=Sunday)
         // (Monday-Thursday in this example)
     },
@@ -60,6 +60,28 @@ $('#calendar').fullCalendar({
                 },
                 true // make the event "sticsk"
             );
+
+            $.ajax({
+                url: '/appointment',
+                dataType: 'json',
+                type : "POST", // http method
+                data: {
+                    // our hypothetical feed requires UNIX timestamps
+                    start: start.unix(),
+                    end: end.unix()
+                },
+                success: function(doc) {
+                    console.log("Exito");
+                    var events = [];
+                    $(doc).find('event').each(function() {
+                        events.push({
+                            title: $(this).attr('title'),
+                            start: $(this).attr('start') // will be parsed
+                        });
+                    });
+                    callback(events);
+                }
+            });
 
         }
         calendar.fullCalendar('unselect');
