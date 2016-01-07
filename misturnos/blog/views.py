@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.utils import timezone
+from django.conf import settings
 from .models import Post
 from .models import Profile
 from .models import Address
@@ -19,7 +21,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
-from django.conf import settings
+from django.core.urlresolvers import reverse
 
 
 def post_list(request):
@@ -81,7 +83,7 @@ class Register(View):
         print "\n Register"
         try:
             data = request.POST
-            print request.POST
+
             if not data:
                 raise ValueError(u"Formulario de registración vacio")
 
@@ -138,6 +140,13 @@ def logout(request):
 
 def change_password(request):
     return render(request, 'blog/change-password.html')
+
+
+def calendar(request):
+    date = datetime.datetime(2015, 4, 1)
+
+    return render(request, 'blog/calendar.html', {'date': date})
+    return render(request, 'schedule/calendar.html')  # , {'date': date})
 
 
 class Login(View):
@@ -254,7 +263,7 @@ class Perfil(View):
         if not perfil.avatar:
             pathtoimage = 'static/img/default.jpg'
         else:
-            pathtoimage = perfil.avatar.url
+            pathtoimage = "media/%s" % (perfil.avatar.url)
 
         data = {
             'nombre': usuario.first_name,
@@ -270,11 +279,6 @@ class Perfil(View):
         return render(request, 'blog/profile.html', {'form': form,
                       'avatar': pathtoimage})
 
-    def handle_uploaded_file(self, f):
-        with open(f, 'wb+') as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
-
 
 class Patients(View):
     def post(self, request, *args, **kwargs):
@@ -282,63 +286,9 @@ class Patients(View):
             data = request.POST
             usuario = request.user
 
-            if data is None:
-                raise ValueError(u'Deben completarse todos los campos')
 
-            name = data.get('name', None)
-            last_name = data.get('last_name', None)
-            phone_number = data.get('phone_number', None)
-            email = data.get('email', None)
-            medical_coverage = data.get('medical_coverage', None)
-            notes = data.get('notes', None)
-            born_date = data.get('born_date', None)
-
-            patient = Patient.objects.create(doctor=usuario)
-            patient.doctor = usuario
-            patient.name = name
-            patient.last_name = last_name
-            patient.email = email
-            patient.phone_number = phone_number
-            patient.medical_coverage = medical_coverage
-            patient.notes = notes
-            patient.born_date = born_date
-
-            patient.save()
-
-            return redirect('/pacientes')
-
-        except ValueError as error:
-            print error
-            return redirect('/pacientes')
-
-    def get(self, request, *args, **kwargs):
-        form = PatientsForm()
-        return render(request, 'blog/patients.html', {'form': form})
-
-
-class PatientsList(View):
-        def get(self, request, *args, **kwargs):
-            try:
-                user = request.user
-
-                patients = Patient.objects.filter(doctor=user)
-
-            except ValueError as error:
-                print error
-                return redirect('/lista-pacientes')
-
-            return render(request, 'blog/patients_list.html', {'patients': patients})
-
-
-class PatientsListTest(View):
-        def get(self, request, *args, **kwargs):
-            try:
-                user = request.user
-
-                patients = Patient.objects.filter(doctor=user)
-
-            except ValueError as error:
-                print error
-                return redirect('/lista-pacientes')
-
-            return render(request, 'blog/patients_list_test.html', {'patients': patients})
+class Appointment(View):
+    def post(self, request, *args, **kwargs):
+        print 'Appointment POST'
+        data = request.POST
+        print data.values()

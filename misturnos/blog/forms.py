@@ -19,7 +19,7 @@ class LoginForm(forms.ModelForm):
     helper.add_input(
         Submit(
                'submit',
-               'Registrarse',
+               'Ingresar',
                css_class='btn btn-lg btn-primary btn-block'
             )
     )
