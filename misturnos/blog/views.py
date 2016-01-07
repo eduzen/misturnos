@@ -280,15 +280,77 @@ class Perfil(View):
                       'avatar': pathtoimage})
 
 
+class Appointment(View):
+    """docstring for Appointment"""
+    def post(self, request, *args, **kwargs):
+        print 'Appointment POST'
+        data = request.POST
+        print data.values()
+
+
 class Patients(View):
     def post(self, request, *args, **kwargs):
         try:
             data = request.POST
             usuario = request.user
 
+            if data is None:
+                raise ValueError(u'Deben completarse todos los campos')
 
-class Appointment(View):
-    def post(self, request, *args, **kwargs):
-        print 'Appointment POST'
-        data = request.POST
-        print data.values()
+            name = data.get('name', None)
+            last_name = data.get('last_name', None)
+            phone_number = data.get('phone_number', None)
+            email = data.get('email', None)
+            medical_coverage = data.get('medical_coverage', None)
+            notes = data.get('notes', None)
+            born_date = data.get('born_date', None)
+
+            patient = Patient.objects.create(doctor=usuario)
+            patient.doctor = usuario
+            patient.name = name
+            patient.last_name = last_name
+            patient.email = email
+            patient.phone_number = phone_number
+            patient.medical_coverage = medical_coverage
+            patient.notes = notes
+            patient.born_date = born_date
+
+            patient.save()
+
+            return redirect('/pacientes')
+
+        except ValueError as error:
+            print error
+            return redirect('/pacientes')
+
+    def get(self, request, *args, **kwargs):
+        form = PatientsForm()
+        return render(request, 'blog/patients.html', {'form': form})
+
+
+class PatientsList(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            user = request.user
+
+            patients = Patient.objects.filter(doctor=user)
+
+        except ValueError as error:
+            print error
+            return redirect('/lista-pacientes')
+
+        return render(request, 'blog/patients_list.html', {'patients': patients})
+
+
+class PatientsListTest(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            user = request.user
+
+            patients = Patient.objects.filter(doctor=user)
+
+        except ValueError as error:
+            print error
+            return redirect('/lista-pacientes')
+
+        return render(request, 'blog/patients_list_test.html', {'patients': patients})
