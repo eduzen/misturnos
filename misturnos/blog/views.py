@@ -11,10 +11,12 @@ from .models import Post
 from .models import Profile
 from .models import Address
 from .models import Project
+from .models import Patient
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
 from .forms import ProfileForm
+from .forms import PatientsForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -277,10 +279,12 @@ class Perfil(View):
         return render(request, 'blog/profile.html', {'form': form,
                       'avatar': pathtoimage})
 
-    def handle_uploaded_file(self, f):
-        with open(f, 'wb+') as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
+
+class Patients(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.POST
+            usuario = request.user
 
 
 class Appointment(View):

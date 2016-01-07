@@ -34,6 +34,52 @@ class Post(models.Model):
         return self.title
 
 
+class Patient(models.Model):
+    # Relations
+    doctor = models.ForeignKey(User)
+    # Attributes
+    name = models.CharField(verbose_name=(u'Nombre'),
+                            max_length=50)
+    last_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    notes = models.CharField(max_length=600, blank=True, null=True)
+    medical_coverage = models.CharField(max_length=100,
+                                        blank=True, null=True)
+    born_date = models.DateTimeField(
+            blank=True, null=True)
+    phone_regex = RegexValidator(
+        regex=r'^\d{8,13}$',
+        message="Phone number must be entered in the format: '99999999'."
+        "Hasta 13 digits permitidos."
+    )
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=26,
+        blank=True
+    )
+
+    # Methods
+    @property
+    def edad(self):
+        return timezone.now() - self.born_date
+
+
+class Appointment(models.Model):
+    # Relations
+    doctor = models.ForeignKey(User)
+    patient = models.ForeignKey(Patient)
+    # Attributes
+    appointment_date = models.DateTimeField(
+                    blank=False, null=False)
+    confirm = models.BooleanField(default=False)
+    sms_sent = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
+    first_time = models.BooleanField(default=True)
+
+
+
+
+
 class Profile(models.Model):
     # Relations
     user = models.OneToOneField(
@@ -134,3 +180,5 @@ def create_profile_for_new_user(sender, created, instance, **kwargs):
     if created:
         profile = Profile(user=instance)
         profile.save()
+
+

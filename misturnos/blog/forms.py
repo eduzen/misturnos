@@ -104,3 +104,54 @@ class ProfileForm(forms.Form):
                css_class='btn btn-lg btn-primary btn-block'
             )
     )
+
+
+class PatientsForm(forms.Form):
+    name = forms.CharField(
+        label='Nombre',
+        max_length=30,
+        required=False,
+    )
+    last_name = forms.CharField(
+        label='Apellido',
+        max_length=80,
+        required=False,
+    )
+    phone_number = forms.CharField(
+        label='Telefono',
+        max_length=26,
+        required=False,
+    )
+    email = forms.CharField(
+        label='Email',
+        max_length=80,
+        required=False,
+    )
+    medical_coverage = forms.CharField(
+        label='Obra Social',
+        max_length=80,
+        required=False,
+    )
+    born_date = forms.DateField(
+        widget=forms.TextInput(attrs={
+                                    'type': 'date'
+                               }),
+        label='Fecha de Nacimiento',
+        required=False,
+    )
+    notes = forms.CharField(
+        widget=forms.Textarea(),
+        label='Notas',
+        max_length=600,
+        required=False,
+    )
+    helper = FormHelper()
+    helper.form_action = '/pacientes'
+    helper.form_method = 'post'
+    helper.add_input(
+        Submit(
+               'submit',
+               'Guardar',
+               css_class='btn btn-lg btn-primary btn-block'
+            )
+    )

@@ -4,17 +4,29 @@
 {% block content %}
 
 <header>
-    <div class="container">
+    <div class="container" style='{padding-top: 150px !important;}'>
         <div class="row">
-          <div class="col-md-4"></div>
+          <div class="col-md-4">
+          </div>
 
           <div class="col-md-4" style="">
-              <h2 class="form-signin-heading">Perfil {{ user }}</h2>
-              {% crispy form %}
+              <h2 class="form-signin-heading">Pacientes</h2>
+
+                {% for patient in patients %}
+                    {{ patient.name }}
+                    {{ patient.last_name }}
+                    {{ patient.phone_number }}
+                    {{ patient.email }}
+                    {{ patient.medical_coverage }}
+                    {{ patient.born_date }}
+                    {{ patient.id }}
+                    {{ patient.notes }}
+                {% endfor %}
 
 
           </div>
-          <div class="col-md-4"></div>
+          <div class="col-md-4">
+          </div>
         </div>
     </div>
     </div>
@@ -41,5 +53,3 @@
 
 
 {% endblock %}
-
-
