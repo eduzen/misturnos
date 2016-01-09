@@ -2,7 +2,6 @@ coverage==4.0.3
 decorator==4.0.6
 Django==1.9.1
 django-admin-bootstrapped==2.5.7
-django-allauth==0.24.1
 django-annoying==0.8.4
 django-authtools==1.4.0
 django-bower==5.0.4
