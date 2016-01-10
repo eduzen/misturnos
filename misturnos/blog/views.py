@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import datetime
 from django.utils import timezone
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -14,6 +13,7 @@ from .models import Profile
 from .models import Address
 from .models import Project
 from .models import Patient
+from .models import Appointment
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
@@ -141,11 +141,10 @@ def change_password(request):
 
 
 def calendar(request):
-    date = datetime.datetime(2015, 4, 1)
+    user = request.user
+    patients = Patient.objects.filter(doctor=user)
 
-    return render(request, 'blog/calendar.html', {'date': date})
-    return render(request, 'schedule/calendar.html')  # , {'date': date})
-
+    return render(request, 'blog/calendar.html', {'patients': patients})
 
 class Login(View):
     def post(self, request, *args, **kwargs):

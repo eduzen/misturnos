@@ -77,9 +77,6 @@ class Appointment(models.Model):
     first_time = models.BooleanField(default=True)
 
 
-
-
-
 class Profile(models.Model):
     # Relations
     user = models.OneToOneField(
