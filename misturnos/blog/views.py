@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
 import datetime
+from django.utils import timezone
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
-from django.utils import timezone
-from django.conf import settings
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.models import User
 from .models import Post
 from .models import Profile
 from .models import Address
@@ -17,11 +19,7 @@ from .forms import UserForm
 from .forms import LoginForm
 from .forms import ProfileForm
 from .forms import PatientsForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 
 
 def post_list(request):
@@ -286,6 +284,13 @@ class Appointment(View):
         print 'Appointment POST'
         data = request.POST
         print data.values()
+
+        ajax_vars = {'success': True, 'error': 'Usuario creado!'}
+
+        return HttpResponse(
+            json.dumps(ajax_vars),
+            content_type='application/javascript'
+        )
 
 
 class Patients(View):

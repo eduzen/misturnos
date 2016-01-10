@@ -68,7 +68,8 @@ $('#calendar').fullCalendar({
                 data: {
                     // our hypothetical feed requires UNIX timestamps
                     start: start.unix(),
-                    end: end.unix()
+                    end: end.unix(),
+                    allDay: allDay
                 },
                 success: function(doc) {
                     console.log("Exito");
