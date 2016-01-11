@@ -340,17 +340,3 @@ class PatientsList(View):
             return redirect('/lista-pacientes')
 
         return render(request, 'blog/patients_list.html', {'patients': patients})
-
-
-class PatientsListTest(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            user = request.user
-
-            patients = Patient.objects.filter(doctor=user)
-
-        except ValueError as error:
-            print error
-            return redirect('/lista-pacientes')
-
-        return render(request, 'blog/patients_list_test.html', {'patients': patients})
