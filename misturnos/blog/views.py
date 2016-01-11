@@ -8,6 +8,7 @@ from django.views.generic import View
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
 from .models import Post
 from .models import Profile
 from .models import Address
@@ -142,20 +143,20 @@ def change_password(request):
 
 def calendar(request):
     user = request.user
-    patients = Patient.objects.filter(doctor=user)
+    patients = Patient.objects.filter(doctor=user).values(
+        'id', 'name', 'last_name'
+    )
 
     return render(request, 'blog/calendar.html', {'patients': patients})
 
+
 class Login(View):
     def post(self, request, *args, **kwargs):
-        print 'Algo'
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            print 'not none'
             if user.is_active:
-                print 'is active'
                 auth_login(request, user)
                 return redirect('/home')
 
@@ -277,7 +278,7 @@ class Perfil(View):
                       'avatar': pathtoimage})
 
 
-class Appointment(View):
+class Appointments(View):
     """docstring for Appointment"""
     def post(self, request, *args, **kwargs):
         print 'Appointment POST'

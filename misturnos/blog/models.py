@@ -1,11 +1,10 @@
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
-import os
+from django.utils import timezone
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
@@ -69,8 +68,14 @@ class Appointment(models.Model):
     doctor = models.ForeignKey(User)
     patient = models.ForeignKey(Patient)
     # Attributes
-    appointment_date = models.DateTimeField(
-                    blank=False, null=False)
+    start = models.DateTimeField(
+                    default=timezone.now,
+                    blank=False, null=False
+    )
+    end = models.DateTimeField(
+                    default=timezone.now,
+                    blank=False, null=False
+    )
     confirm = models.BooleanField(default=False)
     sms_sent = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
