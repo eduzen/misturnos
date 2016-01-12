@@ -49,8 +49,8 @@ $('#calendar').fullCalendar({
     },
     select: function(start, end, allDay) {
         var title = prompt('Paciente:');
+        var calendar = $('#calendar')
         if (title) {
-            var calendar = $('#calendar')
             calendar.fullCalendar('renderEvent',
                 {
                     title: title,
@@ -58,7 +58,7 @@ $('#calendar').fullCalendar({
                     end: end,
                     allDay: false
                 },
-                true // make the event "sticsk"
+                true // make the event "stick"
             );
 
             $.ajax({
