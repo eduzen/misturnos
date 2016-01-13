@@ -181,8 +181,39 @@ LOGGING = {
 }
 
 #EMAIL setting
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'lsofia.enriquez@gmail.com'
-EMAIL_HOST_PASSWORD = '@@@alberdi@@@'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'lsofia.enriquez@gmail.com'
+#EMAIL_HOST_PASSWORD = '@@@alberdi@@@'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+
+def mail(to, subject, text):
+    msg = MIMEMultipart()
+    
+    gmail_user = 'lsofia.enriquez@gmail.com'
+    gmail_pwd = '@@@alberdi@@@'
+
+    msg['From'] = gmail_user
+    msg['To'] = to
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(text))
+
+    part = MIMEBase('application', 'octet-stream')
+    encoders.encode_base64(part)
+    msg.attach(part)
+
+    mailServer = smtplib.SMTP("smtp.gmail.com", 587)
+    mailServer.ehlo()
+    mailServer.starttls()
+    mailServer.ehlo()
+    mailServer.login(gmail_user, gmail_pwd)
+    mailServer.sendmail(gmail_user, to, msg.as_string())
+    # Should be mailServer.quit(), but that crashes...
+    mailServer.close()
