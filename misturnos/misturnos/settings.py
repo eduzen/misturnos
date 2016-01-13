@@ -196,8 +196,8 @@ from email import encoders
 def mail(to, subject, text):
     msg = MIMEMultipart()
     
-    gmail_user = 'lsofia.enriquez@gmail.com'
-    gmail_pwd = '@@@alberdi@@@'
+    gmail_user = '@gmail.com'
+    gmail_pwd = '@'
 
     msg['From'] = gmail_user
     msg['To'] = to
