@@ -179,3 +179,10 @@ LOGGING = {
         },
     }
 }
+
+#EMAIL setting
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lsofia.enriquez@gmail.com'
+EMAIL_HOST_PASSWORD = '@@@alberdi@@@'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
