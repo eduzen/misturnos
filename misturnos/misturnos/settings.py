@@ -180,13 +180,15 @@ LOGGING = {
     }
 }
 
-#EMAIL setting
+#EMAIL if you have service use django email
+
 #EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = 'lsofia.enriquez@gmail.com'
-#EMAIL_HOST_PASSWORD = '@@@alberdi@@@'
+#EMAIL_HOST_USER = 'user@gmail.com'
+#EMAIL_HOST_PASSWORD = 'pass'
 #EMAIL_PORT = 587
 #EMAIL_USE_TLS = True
 
+#EMAIL if want to use your gmail account. 
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
