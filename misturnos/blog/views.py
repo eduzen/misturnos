@@ -1,27 +1,26 @@
 # -*- coding: utf-8 -*-
 import json
-import datetime
+from django.utils import timezone
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import View
-from django.utils import timezone
-from django.conf import settings
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
 from .models import Post
 from .models import Profile
 from .models import Address
 from .models import Project
 from .models import Patient
+from .models import Appointment
 from .forms import PostForm
 from .forms import UserForm
 from .forms import LoginForm
 from .forms import ProfileForm
 from .forms import PatientsForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 
 
 def post_list(request):
@@ -143,22 +142,21 @@ def change_password(request):
 
 
 def calendar(request):
-    date = datetime.datetime(2015, 4, 1)
+    user = request.user
+    patients = Patient.objects.filter(doctor=user).values(
+        'id', 'name', 'last_name'
+    )
 
-    return render(request, 'blog/calendar.html', {'date': date})
-    return render(request, 'schedule/calendar.html')  # , {'date': date})
+    return render(request, 'blog/calendar.html', {'patients': patients})
 
 
 class Login(View):
     def post(self, request, *args, **kwargs):
-        print 'Algo'
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            print 'not none'
             if user.is_active:
-                print 'is active'
                 auth_login(request, user)
                 return redirect('/home')
 
@@ -280,12 +278,19 @@ class Perfil(View):
                       'avatar': pathtoimage})
 
 
-class Appointment(View):
+class Appointments(View):
     """docstring for Appointment"""
     def post(self, request, *args, **kwargs):
         print 'Appointment POST'
         data = request.POST
         print data.values()
+
+        ajax_vars = {'success': True, 'error': 'Usuario creado!'}
+
+        return HttpResponse(
+            json.dumps(ajax_vars),
+            content_type='application/javascript'
+        )
 
 
 class Patients(View):
