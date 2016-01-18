@@ -1,3 +1,13 @@
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
 $(document).ready(function() {
 // page is now ready, initialize the calendar...
 $('#calendar').fullCalendar({
@@ -60,6 +70,12 @@ $('#calendar').fullCalendar({
                 },
                 true // make the event "sticsk"
             );
+            var start = moment(start).format("YYYY-MM-DD HH:mm");
+            var end = moment(end).format("YYYY-MM-DD HH:mm");
+            var uuid = generateUUID();
+            console.log(uuid)
+            console.log(start)
+            console.log(end)
 
             $.ajax({
                 url: '/appointment',
@@ -67,8 +83,10 @@ $('#calendar').fullCalendar({
                 type : "POST", // http method
                 data: {
                     // our hypothetical feed requires UNIX timestamps
-                    start: start.unix(),
-                    end: end.unix()
+                    id: uuid,
+                    start: start,
+                    end: end,
+                    allDay: allDay
                 },
                 success: function(doc) {
                     console.log("Exito");
