@@ -31,11 +31,14 @@ urlpatterns += [
         r'^logout/$',
         auth_views.logout,
         {'template_name': 'blog/index.html'}
-        ),
+    ),
     url(
         r'^change-password/$',
         auth_views.password_change,
         {'template_name': 'blog/change-password.html'}
-    )
+    ),
+    url(
+        r'^',
+        include('favicon.urls')
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

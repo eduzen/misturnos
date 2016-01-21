@@ -8,7 +8,13 @@ function generateUUID() {
     return uuid;
 };
 
+
 $(document).ready(function() {
+
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+})
+
 // page is now ready, initialize the calendar...
 $('#calendar').fullCalendar({
     lang: 'es',
@@ -58,7 +64,13 @@ $('#calendar').fullCalendar({
         }
     },
     select: function(start, end, allDay) {
-        var title = prompt('Paciente:');
+        $.each(pacientes, function (i, item) {
+            $('#patients').append($('<option>', {
+                value: item.id,
+                text : item.last_name + ' ' + item.name
+            }));
+        });
+        $('#myModal').modal('show');
         if (title) {
             var calendar = $('#calendar')
             calendar.fullCalendar('renderEvent',
