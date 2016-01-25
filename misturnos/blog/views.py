@@ -69,9 +69,15 @@ def testnavbar(request):
     return render(request, 'blog/navbar.html')
 
 
-def index(request):
-    return render(request, 'blog/index.html')
+class Index(View):
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        print data
+        return render(request, 'blog/index.html')
 
+    def get(self, request, *args, **kwargs):
+        return render(request, 'blog/index.html')
+        
 
 def login(request):
     return render(request, 'blog/login.html')
