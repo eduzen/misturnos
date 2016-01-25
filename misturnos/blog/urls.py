@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^pacientes$', login_required(views.Patients.as_view())),
     url(r'^lista-pacientes$', login_required(views.PatientsList.as_view())),
     url(r'^lista-pacientes-test$', login_required(views.PatientsListTest.as_view())),
+    url(r'^contactarse$', views.Contacto.as_view()),
 
 ]

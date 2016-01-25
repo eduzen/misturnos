@@ -68,7 +68,7 @@ def test(request):
 def testnavbar(request):
     return render(request, 'blog/navbar.html')
 
-
+#TAKE CARE
 class Index(View):
     def post(self, request, *args, **kwargs):
         data = request.POST
@@ -365,3 +365,10 @@ class PatientsListTest(View):
             return redirect('/lista-pacientes')
 
         return render(request, 'blog/patients_list_test.html', {'patients': patients})
+
+class Contacto(View):
+    def post(self, request, *args, **kwargs):
+        print request.POST
+    def get(self, request, *args, **kwargs):
+        return render(request, 'blog/index.html')
+
